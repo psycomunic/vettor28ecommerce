@@ -1,0 +1,12 @@
+{
+  "name": "vettor-28-ecommerce",
+  "version": "1.0.0",
+  "description": "VETTOR 28 - Desenvolvimento e performance para e-commerce",
+  "main": "index.html",
+  "scripts": {
+    "dev": "serve ."
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  }
+}
