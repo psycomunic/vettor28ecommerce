@@ -191,6 +191,8 @@
   @keyframes scroll{to{transform:translateX(-50%)}}
   .logo-pill{flex:0 0 auto;display:grid;place-items:center;height:78px;min-width:190px;padding:0 28px;border:1px solid var(--line);border-radius:14px;background:var(--ink-1);font-family:'Space Grotesk';font-weight:700;font-size:1.05rem;letter-spacing:.04em;color:var(--cream);opacity:.82;transition:opacity .2s,border-color .2s}
   .logo-pill:hover{opacity:1;border-color:var(--violet-2)}
+  .logo-pill img{filter:brightness(0) invert(1) opacity(0.45); transition:all 0.3s ease;}
+  .logo-pill:hover img{filter:brightness(0) saturate(100%) invert(86%) sepia(21%) saturate(2250%) hue-rotate(326deg) brightness(104%) contrast(101%); transform:scale(1.05); opacity:1;}
   .logo-pill small{display:block;font-size:.6rem;letter-spacing:.18em;color:var(--muted);font-weight:500;text-align:center;margin-top:2px}
 
   /* cases numéricos */
