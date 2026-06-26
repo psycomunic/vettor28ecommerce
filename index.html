@@ -195,6 +195,18 @@
   .logo-pill:hover img{filter:brightness(0) saturate(100%) invert(86%) sepia(21%) saturate(2250%) hue-rotate(326deg) brightness(104%) contrast(101%); transform:scale(1.1); opacity:1;}
   .logo-pill small{display:block;font-size:.6rem;letter-spacing:.18em;color:var(--muted);font-weight:500;text-align:center;margin-top:2px}
 
+  /* portfolio */
+  .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 30px; }
+  .portfolio-item { background: var(--ink-2); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; transition: border-color .3s, transform .3s; }
+  .portfolio-item:hover { border-color: var(--amber); transform: translateY(-4px); }
+  .portfolio-scroll { position: relative; width: 100%; aspect-ratio: 1 / 0.95; overflow: hidden; background: #0c0812; border-bottom: 1px solid var(--line); }
+  .portfolio-scroll img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; transition: object-position 6s ease-in-out; }
+  .portfolio-item:hover .portfolio-scroll img { object-position: bottom; }
+  .portfolio-info { padding: 22px; text-align: center; }
+  .portfolio-info h3 { font-size: 1.15rem; color: var(--cream); margin: 0; font-family: 'Space Grotesk'; }
+  .placeholder-box { width: 100%; height: 100%; display: grid; place-items: center; color: var(--muted); font-size: 0.9rem; font-family: 'Space Grotesk'; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; background: rgba(157, 92, 255, 0.05); }
+  .portfolio-item.empty { opacity: 0.5; pointer-events: none; }
+
   /* cases numéricos */
   .case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:52px}
   .case{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--ink-1);transition:border-color .25s,transform .25s}
@@ -403,6 +415,46 @@
     <span class="badge"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FFC15E" stroke-width="2"/><path d="M8 13c1.5 2 6 2 8-1" stroke="#9D5CFF" stroke-width="2" stroke-linecap="round"/></svg> Meta Business Partner</span>
     <span class="badge"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="#FFC15E" stroke-width="2"/><path d="M7 9h10M7 13h6" stroke="#9D5CFF" stroke-width="2" stroke-linecap="round"/></svg> Magazord</span>
     <span class="badge"><svg viewBox="0 0 24 24" fill="none"><path d="M3 7h11v8H3zM14 10h4l3 3v2h-7z" stroke="#FFC15E" stroke-width="2" stroke-linejoin="round"/><circle cx="7" cy="17" r="1.6" stroke="#9D5CFF" stroke-width="2"/><circle cx="17" cy="17" r="1.6" stroke="#9D5CFF" stroke-width="2"/></svg> Frete Barato</span>
+  </div>
+</section>
+<!-- PORTFOLIO / SITES -->
+<section class="pad portfolio" id="portfolio">
+  <div class="wrap">
+    <span class="eyebrow" style="text-align:center; display:block;">Nosso Trabalho</span>
+    <h2 style="text-align:center; margin-top:18px; margin-bottom: 50px;">Sites que desenvolvemos</h2>
+    
+    <div class="portfolio-grid">
+      <!-- Site Item 1 -->
+      <div class="portfolio-item">
+        <div class="portfolio-scroll">
+          <img src="SITES/casalinda.jpg" alt="Site Casa Linda">
+        </div>
+        <div class="portfolio-info">
+          <h3>Casa Linda</h3>
+        </div>
+      </div>
+      
+      <!-- Espaços para os próximos 2 sites -->
+      <div class="portfolio-item empty">
+        <div class="portfolio-scroll">
+          <!-- <img src="SITES/site2.jpg" alt="Site 2"> -->
+          <div class="placeholder-box">Em Breve</div>
+        </div>
+        <div class="portfolio-info">
+          <h3>Projeto 02</h3>
+        </div>
+      </div>
+
+      <div class="portfolio-item empty">
+        <div class="portfolio-scroll">
+           <!-- <img src="SITES/site3.jpg" alt="Site 3"> -->
+           <div class="placeholder-box">Em Breve</div>
+        </div>
+        <div class="portfolio-info">
+          <h3>Projeto 03</h3>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
