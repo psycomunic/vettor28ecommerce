@@ -189,10 +189,10 @@
   .marquee.rev{animation-direction:reverse;animation-duration:46px;margin-top:16px}
   .wall:hover .marquee{animation-play-state:paused}
   @keyframes scroll{to{transform:translateX(-50%)}}
-  .logo-pill{flex:0 0 auto;display:grid;place-items:center;height:120px;min-width:280px;padding:0 14px;border:1px solid var(--line);border-radius:16px;background:var(--ink-1);font-family:'Space Grotesk';font-weight:700;font-size:1.05rem;letter-spacing:.04em;color:var(--cream);opacity:.82;transition:opacity .2s,border-color .2s}
+  .logo-pill{flex:0 0 auto;display:grid;place-items:center;height:80px;min-width:200px;padding:0;border:1px solid var(--line);border-radius:14px;background:var(--ink-1);font-family:'Space Grotesk';font-weight:700;font-size:1.05rem;letter-spacing:.04em;color:var(--cream);opacity:.82;transition:opacity .2s,border-color .2s;overflow:hidden}
   .logo-pill:hover{opacity:1;border-color:var(--violet-2)}
-  .logo-pill img{max-height:94px;max-width:250px;width:auto;height:auto;filter:brightness(0) invert(1) opacity(0.45); transform:scale(1.15); transition:all 0.3s ease;}
-  .logo-pill:hover img{filter:brightness(0) saturate(100%) invert(86%) sepia(21%) saturate(2250%) hue-rotate(326deg) brightness(104%) contrast(101%); transform:scale(1.25); opacity:1;}
+  .logo-pill img{width:100%;height:100%;object-fit:contain;filter:brightness(0) invert(1) opacity(0.45); transform:scale(2.2); transition:all 0.3s ease;}
+  .logo-pill:hover img{filter:brightness(0) saturate(100%) invert(86%) sepia(21%) saturate(2250%) hue-rotate(326deg) brightness(104%) contrast(101%); transform:scale(2.35); opacity:1;}
   .logo-pill small{display:block;font-size:.6rem;letter-spacing:.18em;color:var(--muted);font-weight:500;text-align:center;margin-top:2px}
 
   /* cases numéricos */
