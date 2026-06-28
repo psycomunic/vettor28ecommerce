@@ -27,12 +27,12 @@ export function Header({ onMenuClick }: HeaderProps) {
       zIndex: 30,
     }}>
 
-      {/* Botão menu mobile */}
+      {/* Botão menu mobile — escondido em desktop via CSS */}
       <button
         id="btn-menu-mobile"
         onClick={onMenuClick}
-        className="btn btn-ghost btn-sm lg:hidden"
-        style={{ padding: 8, flexShrink: 0 }}
+        className="mobile-menu-btn"
+        style={{ padding: 8, flexShrink: 0, background: 'none', border: 'none', cursor: 'pointer', color: 'var(--lilac)', display: 'flex', alignItems: 'center' }}
         aria-label="Abrir menu"
       >
         <Menu size={20} />
@@ -107,8 +107,7 @@ export function Header({ onMenuClick }: HeaderProps) {
           }}>
             {profile.nome.split(' ').slice(0,2).map((n: string) => n[0]).join('').toUpperCase()}
           </div>
-          <div style={{ display: 'none' }} className="sm:block">
-            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--cream)', fontFamily: 'var(--font-data)' }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--cream)', fontFamily: 'var(--font-data)' }}>
               {profile.nome.split(' ')[0]}
             </div>
             <div style={{ fontSize: 11, color: 'var(--lilac)', textTransform: 'capitalize' }}>

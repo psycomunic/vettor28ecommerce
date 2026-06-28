@@ -14,6 +14,12 @@ export default function DashboardLayout({
 
   return (
     <ToastProvider>
+      <style>{`
+        @media (min-width: 1024px) {
+          .sidebar-spacer { display: block !important; }
+          .mobile-menu-btn { display: none !important; }
+        }
+      `}</style>
       <div style={{ display: 'flex', minHeight: '100dvh', background: 'var(--void)' }}>
         {/* Overlay mobile */}
         {sidebarOpen && (
@@ -31,6 +37,12 @@ export default function DashboardLayout({
 
         {/* Sidebar */}
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+        {/* Espaçador desktop — empurra o conteúdo para a direita da sidebar */}
+        <div
+          className="sidebar-spacer"
+          style={{ width: 256, minWidth: 256, flexShrink: 0, display: 'none' }}
+        />
 
         {/* Conteúdo principal */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>

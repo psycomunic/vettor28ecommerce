@@ -49,22 +49,34 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     : navItems.filter(item => !profile || item.roles.includes(profile.role))
 
   return (
-    <aside style={{
-      width: 256,
-      minWidth: 256,
-      background: 'var(--ink-1)',
-      borderRight: '1px solid var(--border-subtle)',
-      display: 'flex',
-      flexDirection: 'column',
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      height: '100dvh',
-      zIndex: 50,
-      transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
-      transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    }}
-    className="lg:!translate-x-0 lg:relative lg:h-auto">
+    <>
+      <style>{`
+        @media (min-width: 1024px) {
+          .sidebar-vettor {
+            transform: translateX(0) !important;
+            position: relative !important;
+            height: 100dvh !important;
+          }
+        }
+      `}</style>
+      <aside
+        className="sidebar-vettor"
+        style={{
+          width: 256,
+          minWidth: 256,
+          background: 'var(--ink-1)',
+          borderRight: '1px solid var(--border-subtle)',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          height: '100dvh',
+          zIndex: 50,
+          transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
+          transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+      >
 
       {/* Header da sidebar */}
       <div style={{
@@ -197,6 +209,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           Sair
         </button>
       </div>
-    </aside>
+      </aside>
+    </>
   )
 }
