@@ -228,7 +228,7 @@ export function DashboardClient({ profile, clientes, integracoes, metrics, taref
                 <Tooltip
                   contentStyle={{ background: '#1C0F35', border: '1px solid rgba(174,150,214,0.3)', borderRadius: 10, fontFamily: 'var(--font-data)', fontSize: 12 }}
                   labelStyle={{ color: '#AE96D6' }}
-                  formatter={(value: number, name: string) => [fmtCurrencyFull(value), name]}
+                  formatter={(value, name) => [fmtCurrencyFull(Number(value ?? 0)), String(name)]}
                 />
                 <Area type="monotone" dataKey="Receita" stroke="#34D399" strokeWidth={2} fill="url(#gRev)" />
                 <Area type="monotone" dataKey="Investimento" stroke="#38BDF8" strokeWidth={2} fill="url(#gSpend)" />
