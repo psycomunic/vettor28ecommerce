@@ -27,7 +27,7 @@ export function Header({ onMenuClick }: HeaderProps) {
       zIndex: 30,
     }}>
 
-      {/* Botão menu mobile — escondido em desktop via CSS */}
+      {/* Botão menu mobile — escondido em desktop via CSS (.mobile-menu-btn) */}
       <button
         id="btn-menu-mobile"
         onClick={onMenuClick}
@@ -58,11 +58,7 @@ export function Header({ onMenuClick }: HeaderProps) {
           onFocus={() => setSearchFocused(true)}
           onBlur={() => setSearchFocused(false)}
           className="input-vettor"
-          style={{
-            paddingLeft: 36,
-            height: 38,
-            fontSize: 13,
-          }}
+          style={{ paddingLeft: 36, height: 38, fontSize: 13 }}
         />
       </div>
 
@@ -77,7 +73,6 @@ export function Header({ onMenuClick }: HeaderProps) {
         aria-label="Notificações"
       >
         <Bell size={20} />
-        {/* Badge de não-lidas — será dinâmico nas próximas fases */}
         <span style={{
           position: 'absolute',
           top: 6, right: 6,
@@ -90,12 +85,7 @@ export function Header({ onMenuClick }: HeaderProps) {
 
       {/* Avatar do usuário */}
       {profile && (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 10,
-          cursor: 'pointer',
-        }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
           <div style={{
             width: 36, height: 36,
             borderRadius: '50%',
@@ -105,9 +95,10 @@ export function Header({ onMenuClick }: HeaderProps) {
             color: 'white',
             boxShadow: '0 2px 8px rgba(124,58,237,0.35)',
           }}>
-            {profile.nome.split(' ').slice(0,2).map((n: string) => n[0]).join('').toUpperCase()}
+            {profile.nome.split(' ').slice(0, 2).map((n: string) => n[0]).join('').toUpperCase()}
           </div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--cream)', fontFamily: 'var(--font-data)' }}>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--cream)', fontFamily: 'var(--font-data)' }}>
               {profile.nome.split(' ')[0]}
             </div>
             <div style={{ fontSize: 11, color: 'var(--lilac)', textTransform: 'capitalize' }}>
