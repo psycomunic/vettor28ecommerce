@@ -1,61 +1,134 @@
-# VETTOR 28 — Página de captação
+# VETTOR 28 — Sistema de Gestão
 
-Página de captação de clientes (one-page) da agência VETTOR 28.
-Desenvolvimento e performance para e-commerce.
+Sistema interno da agência VETTOR 28 para gestão de clientes, entregáveis, resultados e relatórios.
 
-## Estrutura
+## Stack
+
+- **Frontend:** Next.js 15 (App Router) + TypeScript + Tailwind CSS
+- **Backend / Banco / Auth:** Supabase (Postgres + Auth + RLS + Storage)
+- **Deploy:** Vercel
+
+## Configuração Local
+
+### 1. Instalar dependências
+```bash
+cd sistema
+npm install
+```
+
+### 2. Variáveis de ambiente
+```bash
+cp .env.example .env.local
+```
+
+Preencha `.env.local` com as credenciais do seu projeto Supabase:
+- `NEXT_PUBLIC_SUPABASE_URL` — URL do projeto (ex: `https://abc123.supabase.co`)
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — chave anon pública
+- `SUPABASE_SERVICE_ROLE_KEY` — chave service role (secreta, nunca expor ao cliente)
+- `NEXT_PUBLIC_APP_URL` — URL local (ex: `http://localhost:3000`)
+
+### 3. Configurar Supabase
+
+1. Crie um projeto em [supabase.com](https://supabase.com)
+2. Vá em **SQL Editor** e execute as migrations em ordem:
+   - `supabase/migrations/001_init_schema.sql`
+   - `supabase/migrations/002_rls_policies.sql`
+   - `supabase/migrations/003_seed.sql`
+3. Em **Authentication > Email Templates**, configure o template de convite.
+4. Em **Authentication > URL Configuration**, adicione `http://localhost:3000/**` aos Redirect URLs.
+
+### 4. Criar o usuário admin
+
+Após rodar as migrations, crie seu usuário em **Supabase Auth Dashboard → Users → Create user** com o email `psycomunic@gmail.com`, depois execute:
+
+```sql
+UPDATE profiles SET role = 'admin', nome = 'Admin VETTOR 28' WHERE email = 'psycomunic@gmail.com';
+```
+
+### 5. Rodar localmente
+
+```bash
+npm run dev
+```
+
+Acesse: http://localhost:3000
+
+---
+
+## Estrutura do Projeto
 
 ```
-vettor28/
-├── index.html        → a página inteira (HTML + CSS + JS num arquivo só)
-├── assets/
-│   └── daniel.png    → foto do hero (recorte sem fundo)
-└── README.md         → este arquivo
+src/
+├── app/
+│   ├── (dashboard)/         ← Rotas protegidas (autenticado)
+│   │   ├── page.tsx         ← Dashboard principal
+│   │   ├── clientes/        ← CRM de clientes
+│   │   ├── tarefas/         ← Kanban (Fase 2)
+│   │   ├── onboarding/      ← Mapa de entregas (Fase 2)
+│   │   ├── resultados/      ← KPIs (Fase 4)
+│   │   ├── relatorios/      ← Relatórios (Fase 5)
+│   │   ├── integracoes/     ← Conectores (Fase 3)
+│   │   ├── usuarios/        ← Gestão de usuários (admin)
+│   │   ├── configuracoes/   ← Configurações (Fase 2)
+│   │   └── portal/          ← Portal do cliente (Fase 5)
+│   ├── login/               ← Tela de login
+│   ├── auth/callback/       ← Callback OAuth/magic link
+│   └── api/invite/          ← API de convite de usuários
+├── components/
+│   ├── layout/              ← Sidebar, Header
+│   ├── clientes/            ← ClienteCard, ClienteForm, ClienteFicha
+│   └── usuarios/            ← UsuariosClient
+├── hooks/                   ← useUser, useClientes
+├── lib/supabase/            ← Clients browser e server
+├── types/                   ← Tipos TypeScript do banco
+└── middleware.ts            ← Proteção de rotas
 ```
 
-Abra a pasta no Antigravity e edite o `index.html`. Pra visualizar,
-é só abrir o `index.html` no navegador (duplo clique) ou usar um
-servidor local (ex.: extensão Live Server).
+## Banco de Dados
 
-## O que ainda precisa ser trocado
+### Tabelas principais
+| Tabela | Descrição |
+|--------|-----------|
+| `profiles` | Usuários com papel (admin/gestor/colaborador/cliente) |
+| `clients` | Empresas clientes |
+| `client_assignments` | Colaborador ↔ Cliente |
+| `member_services` | Colaborador ↔ Pilar permitido |
+| `pillars` | 4 pilares: Tecnologia, Marketing, Gestão, Atendimento |
+| `deliverables` | Entregáveis por pilar (configurável) |
+| `plans` | Planos contratáveis (Saturno, Falcon, Apollo) |
+| `contracts` | Contratos por cliente |
+| `tasks` | Kanban de tarefas |
+| `onboarding_steps` | Etapas do onboarding |
+| `client_onboarding` | Status de onboarding por cliente |
+| `integrations` | Conexões externas (Meta, Google, GA4, Magazord) |
+| `metrics_daily` | KPIs normalizados por dia |
+| `reports` | Relatórios mensais |
+| `notifications` | Notificações in-app |
+| `audit_log` | Log de auditoria |
 
-1. **WhatsApp** — procure por `5500000000000` no `index.html` e troque
-   pelo seu número com DDI 55 (ex.: 5547999999999). Aparece no botão
-   flutuante, no formulário e no rodapé.
+### Papéis (RBAC)
+| Papel | Acesso |
+|-------|--------|
+| `admin` | Tudo |
+| `gestor` | Clientes atribuídos + tudo dentro deles |
+| `colaborador` | Clientes atribuídos + pilares liberados |
+| `cliente` | Somente portal próprio (leitura) |
 
-2. **E-mail** — procure por `contato@vettor28.com.br` e ajuste.
+## Roadmap
 
-3. **Vídeos dos depoimentos** — no final do `index.html`, no `<script>`,
-   há dois objetos: `YT` e `MP4`. Cole o ID do vídeo do YouTube
-   (ex.: `rafael:"dQw4w9WgXcQ"`) ou um link `.mp4`. Enquanto vazio,
-   o card mostra a foto com "Vídeo em breve".
+| Fase | Status | Conteúdo |
+|------|--------|----------|
+| Fase 1 | ✅ **Concluída** | Setup, auth, RBAC, CRM, usuários |
+| Fase 2 | 🔜 | Pilares, entregáveis, Kanban, onboarding, contratos |
+| Fase 3 | 🔜 | Integrações Meta, Google Ads, GA4, Magazord |
+| Fase 4 | 🔜 | Dashboards de KPIs com Recharts |
+| Fase 5 | 🔜 | Relatórios PDF, portal do cliente |
+| Fase 6 | 🔜 | Notificações, auditoria, polish final |
 
-4. **Fotos dos depoimentos** — hoje são imagens de banco
-   (`images.unsplash.com`). Troque pelos retratos reais dos clientes.
+## Segurança
 
-5. **Logos dos clientes** — na seção de marcas (faixa abaixo do hero),
-   os nomes estão em texto. Substitua pelos logos reais em PNG com
-   fundo transparente.
-
-6. **Números e cases** — `+212%`, `+R$ 40M`, `ROAS 4,2x`, `+120`, etc.
-   e os 3 cards de cases são exemplos. Coloque seus dados reais.
-
-7. **Formulário** — hoje só mostra a mensagem de sucesso. No `<script>`
-   há um comentário `TODO` onde você conecta o envio ao seu CRM,
-   e-mail ou API do WhatsApp.
-
-8. **Redes sociais** — links de Instagram e LinkedIn no rodapé estão
-   como `#`. Aponte para os perfis reais.
-
-## Paleta
-
-- Roxo escuro (fundo): `#0A0413`
-- Violeta: `#7C3AED` / `#9D5CFF`
-- Âmbar/dourado: `#F5A623` / `#FFC15E`
-- Off-white (texto): `#F3EEF8`
-
-## Fontes (Google Fonts)
-
-- Anton (títulos)
-- Space Grotesk (números, rótulos)
-- Sora (texto)
+- ✅ RLS em todas as tabelas — acesso controlado no banco
+- ✅ Service role key nunca exposta ao browser
+- ✅ Tokens de integração criptografados (Fases 3+)
+- ✅ Audit log para ações sensíveis
+- ✅ LGPD: minimização de dados, exportação e exclusão sob demanda (Fase 6)
