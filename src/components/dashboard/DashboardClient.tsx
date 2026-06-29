@@ -12,6 +12,8 @@ import {
 } from 'recharts'
 import { StatCard } from '@/components/ui/StatCard'
 import { Sparkline } from '@/components/ui/Sparkline'
+import { DateFilter } from '@/components/ui/DateFilter'
+import { getPeriodRange, todayISO, daysAgoISO, PeriodPreset } from '@/lib/date-range'
 
 interface Props {
   profile: { id: string; nome: string; role: string; email: string }
@@ -51,16 +53,13 @@ function daysUntil(dateStr: string): number {
   return Math.ceil(diff / 864e5)
 }
 
-const PERIODS = [
-  { label: '7d', days: 7 },
-  { label: '30d', days: 30 },
-  { label: '60d', days: 60 },
-]
-
 export function DashboardClient({ profile, clientes, integracoes, metrics, tarefas, onboarding, contratos }: Props) {
   const hora = new Date().getHours()
   const saudacao = hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite'
-  const [periodDays, setPeriodDays] = useState(30)
+  const [period, setPeriod] = useState<PeriodPreset>('30')
+  const [customStart, setCustomStart] = useState(daysAgoISO(30))
+  const [customEnd, setCustomEnd] = useState(todayISO())
+  const range = getPeriodRange(period, customStart, customEnd)
 
   // ── Série diária agregada (todos os clientes) ────────────
   const series = useMemo(() => {
@@ -80,17 +79,17 @@ export function DashboardClient({ profile, clientes, integracoes, metrics, taref
       .map(([date, v]) => ({ date, ...v }))
   }, [metrics])
 
-  // ── Janelas atual vs. anterior ───────────────────────────
+  // ── Janelas atual vs. anterior (por intervalo de datas) ──
   const { cur, prev, window } = useMemo(() => {
-    const n = series.length
-    const curSlice = series.slice(Math.max(0, n - periodDays))
-    const prevSlice = series.slice(Math.max(0, n - periodDays * 2), Math.max(0, n - periodDays))
+    const inRange = (d: string, s: string, e: string) => d >= s && d <= e
+    const curSlice = series.filter(r => inRange(r.date, range.start, range.end))
+    const prevSlice = series.filter(r => inRange(r.date, range.prevStart, range.prevEnd))
     const agg = (rows: typeof series) => rows.reduce(
       (a, r) => ({ spend: a.spend + r.spend, revenue: a.revenue + r.revenue, orders: a.orders + r.orders, sessions: a.sessions + r.sessions }),
       { spend: 0, revenue: 0, orders: 0, sessions: 0 },
     )
     return { cur: agg(curSlice), prev: agg(prevSlice), window: curSlice }
-  }, [series, periodDays])
+  }, [series, range.start, range.end, range.prevStart, range.prevEnd])
 
   const roas = cur.spend > 0 ? cur.revenue / cur.spend : 0
   const roasPrev = prev.spend > 0 ? prev.revenue / prev.spend : 0
@@ -133,25 +132,29 @@ export function DashboardClient({ profile, clientes, integracoes, metrics, taref
     return { good: true, text: `ROAS médio de ${roas.toFixed(2)}x no período — investimento de ${fmtCurrencyFull(cur.spend)} gerando ${fmtCurrencyFull(cur.revenue)}.` }
   }, [cur, prev, roas, roasPrev])
 
-  const periodLabel = PERIODS.find(p => p.days === periodDays)?.label ?? `${periodDays}d`
+  const periodLabel = range.label
 
   return (
     <div>
-      {/* ── Cabeçalho + filtro de período ─────────────────── */}
-      <div className="animate-fade-in-up" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', marginBottom: 24 }}>
-        <div>
-          <h1 style={{ fontFamily: 'var(--font-title)', fontSize: 30, letterSpacing: '0.02em', color: 'var(--cream)', marginBottom: 4 }}>
-            {saudacao}, {profile.nome.split(' ')[0]}! 👋
-          </h1>
-          <p style={{ color: 'var(--lilac)', fontSize: 14 }}>Visão geral da sua operação nos últimos {periodLabel}.</p>
-        </div>
-        <div className="segmented" role="group" aria-label="Período">
-          {PERIODS.map(p => (
-            <button key={p.days} data-active={periodDays === p.days} onClick={() => setPeriodDays(p.days)}>
-              {p.label}
-            </button>
-          ))}
-        </div>
+      {/* ── Cabeçalho ─────────────────────────────────────── */}
+      <div className="animate-fade-in-up" style={{ marginBottom: 16 }}>
+        <h1 style={{ fontFamily: 'var(--font-title)', fontSize: 30, letterSpacing: '0.02em', color: 'var(--cream)', marginBottom: 4 }}>
+          {saudacao}, {profile.nome.split(' ')[0]}! 👋
+        </h1>
+        <p style={{ color: 'var(--lilac)', fontSize: 14 }}>Visão geral da sua operação — {periodLabel}.</p>
+      </div>
+
+      {/* ── Filtro de período (Hoje · 7/30/60/90 · Personalizado) ── */}
+      <div className="animate-fade-in-up" style={{ marginBottom: 16 }}>
+        <DateFilter
+          period={period}
+          onPeriodChange={setPeriod}
+          customStart={customStart}
+          customEnd={customEnd}
+          onCustomStartChange={setCustomStart}
+          onCustomEndChange={setCustomEnd}
+          hint={`${window.length} ${window.length === 1 ? 'dia' : 'dias'} no período`}
+        />
       </div>
 
       {/* ── Insight automático ────────────────────────────── */}
