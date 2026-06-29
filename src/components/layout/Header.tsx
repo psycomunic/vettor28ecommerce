@@ -1,8 +1,9 @@
 'use client'
 
-import { Bell, Menu, Search } from 'lucide-react'
+import { Menu, Search } from 'lucide-react'
 import { useUser } from '@/hooks/useUser'
 import { useState } from 'react'
+import { NotificationBell } from './NotificationBell'
 
 interface HeaderProps {
   onMenuClick: () => void
@@ -66,22 +67,7 @@ export function Header({ onMenuClick }: HeaderProps) {
       <div style={{ flex: 1 }} />
 
       {/* Notificações */}
-      <button
-        id="btn-notifications"
-        className="btn btn-ghost"
-        style={{ padding: 8, position: 'relative' }}
-        aria-label="Notificações"
-      >
-        <Bell size={20} />
-        <span style={{
-          position: 'absolute',
-          top: 6, right: 6,
-          width: 8, height: 8,
-          borderRadius: '50%',
-          background: 'var(--amber)',
-          border: '2px solid var(--ink-1)',
-        }} />
-      </button>
+      <NotificationBell />
 
       {/* Avatar do usuário */}
       {profile && (

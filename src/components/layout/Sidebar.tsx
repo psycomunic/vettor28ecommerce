@@ -54,8 +54,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         @media (min-width: 1024px) {
           .sidebar-vettor {
             transform: translateX(0) !important;
-            position: relative !important;
-            height: 100dvh !important;
           }
         }
       `}</style>

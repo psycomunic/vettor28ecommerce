@@ -338,7 +338,7 @@ export default function TarefasPage() {
       supabase.from('tasks').select('*, pillar:pillars(id,nome), responsavel:profiles(id,nome), client:clients(id,nome_empresa)').order('created_at', { ascending: false }),
       supabase.from('clients').select('id, nome_empresa').eq('ativo', true).order('nome_empresa'),
       supabase.from('pillars').select('*').order('ordem'),
-      supabase.from('profiles').select('id, nome').order('nome'),
+      supabase.from('profiles').select('id, nome, role').order('nome'),
     ])
     setTasks((tasksRes.data as Task[]) || [])
     setClientes((clientesRes.data as Client[]) || [])
