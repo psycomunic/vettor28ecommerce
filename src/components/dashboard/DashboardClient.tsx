@@ -193,6 +193,29 @@ export function DashboardClient({ profile, clientes, integracoes, metrics, taref
         </div>
       )}
 
+      {/* ── Boas-vindas (quando ainda não há clientes) ────── */}
+      {clientes.length === 0 && (
+        <div className="panel animate-fade-in-up" style={{
+          padding: '26px 30px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 22, flexWrap: 'wrap',
+          background: 'linear-gradient(110deg, rgba(124,58,237,0.14), rgba(56,189,248,0.05))',
+          border: '1px solid rgba(124,58,237,0.3)',
+        }}>
+          <div style={{ width: 54, height: 54, borderRadius: 14, background: 'linear-gradient(135deg, var(--violet), var(--violet-2))', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 6px 20px rgba(124,58,237,0.4)' }}>
+            <Sparkles size={26} color="white" />
+          </div>
+          <div style={{ flex: 1, minWidth: 240 }}>
+            <h3 style={{ fontFamily: 'var(--font-title)', fontSize: 21, color: 'var(--cream)', marginBottom: 4 }}>Bem-vindo à VETTOR 28! 🚀</h3>
+            <p style={{ fontSize: 13.5, color: 'var(--lilac)', maxWidth: 540, lineHeight: 1.5 }}>
+              Seu painel está pronto. Cadastre o primeiro cliente e conecte as integrações (Meta Ads, Google Ads, GA4) — receita, ROAS e os KPIs vão ganhar vida aqui automaticamente.
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <Link href="/clientes" className="btn btn-primary" style={{ gap: 7 }}><Users size={15} /> Adicionar cliente</Link>
+            <Link href="/integracoes" className="btn btn-secondary" style={{ gap: 7 }}><Plug size={15} /> Integrar plataforma</Link>
+          </div>
+        </div>
+      )}
+
       {/* ── KPIs herói ────────────────────────────────────── */}
       <div className="animate-fade-in-up delay-100" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14, marginBottom: 16 }}>
         <StatCard label="Receita atribuída" value={fmtCurrency(cur.revenue)} icon={<TrendingUp size={18} />} color="#34D399" href="/resultados" delta={pctDelta(cur.revenue, prev.revenue)} sparkline={sparkRevenue} sub={`${periodLabel} • vs. período anterior`} />
@@ -212,6 +235,13 @@ export function DashboardClient({ profile, clientes, integracoes, metrics, taref
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: 'var(--lilac)' }}><span style={{ width: 8, height: 8, borderRadius: 2, background: '#38BDF8' }} /> Investimento</span>
             </div>
           </div>
+          {window.length === 0 ? (
+            <div style={{ width: '100%', height: 240, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, textAlign: 'center' }}>
+              <Activity size={28} style={{ color: 'var(--text-dim)' }} />
+              <span style={{ fontSize: 13, fontFamily: 'var(--font-data)', color: 'var(--text-muted)' }}>Sem dados no período</span>
+              <span style={{ fontSize: 12, color: 'var(--text-dim)', maxWidth: 320 }}>Conecte uma integração ou faça uma entrada manual para ver a evolução de receita e investimento.</span>
+            </div>
+          ) : (
           <div style={{ width: '100%', height: 240 }}>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData} margin={{ top: 6, right: 6, left: -10, bottom: 0 }}>
@@ -238,6 +268,7 @@ export function DashboardClient({ profile, clientes, integracoes, metrics, taref
               </AreaChart>
             </ResponsiveContainer>
           </div>
+          )}
         </div>
 
         {/* Stats secundários */}
