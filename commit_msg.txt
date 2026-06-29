@@ -1,1 +1,1 @@
-fix: corrige erro de hidratacao (#418) da saudacao no dashboard  
+feat: tarefas estilo ClickUp - cards abrem painel detalhado com subtarefas  

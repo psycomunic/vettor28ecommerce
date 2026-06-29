@@ -22,8 +22,9 @@ import {
   GripVertical, Tag, ChevronDown, Search, Filter
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { Task, TaskStatus, TaskPriority, Pillar, Client } from '@/types/database'
+import { Task, TaskStatus, TaskPriority, Pillar, Client, Profile } from '@/types/database'
 import { TASK_STATUS_LABELS, TASK_PRIORITY_LABELS, formatDate } from '@/lib/utils'
+import { TaskDetailModal } from '@/components/tarefas/TaskDetailModal'
 import { useEffect } from 'react'
 
 const PRIORITY_COLORS: Record<TaskPriority, string> = {
@@ -117,7 +118,7 @@ function TaskCard({ task, overlay = false }: { task: Task; overlay?: boolean }) 
 }
 
 // ─── Wrapper sortable ──────────────────────────────────────
-function SortableTaskCard({ task }: { task: Task }) {
+function SortableTaskCard({ task, onOpen }: { task: Task; onOpen: (t: Task) => void }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id })
 
   return (
@@ -130,6 +131,7 @@ function SortableTaskCard({ task }: { task: Task }) {
       }}
       {...attributes}
       {...listeners}
+      onClick={() => { if (!isDragging) onOpen(task) }}
     >
       <TaskCard task={task} />
     </div>
@@ -138,11 +140,12 @@ function SortableTaskCard({ task }: { task: Task }) {
 
 // ─── Coluna do Kanban ──────────────────────────────────────
 function KanbanColumn({
-  status, tasks, onAddTask
+  status, tasks, onAddTask, onOpen
 }: {
   status: TaskStatus
   tasks: Task[]
   onAddTask: (status: TaskStatus) => void
+  onOpen: (t: Task) => void
 }) {
   const color = COLUMN_COLORS[status]
 
@@ -198,7 +201,7 @@ function KanbanColumn({
       <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, minHeight: 60 }}>
           {tasks.map(task => (
-            <SortableTaskCard key={task.id} task={task} />
+            <SortableTaskCard key={task.id} task={task} onOpen={onOpen} />
           ))}
         </div>
       </SortableContext>
@@ -324,19 +327,23 @@ export default function TarefasPage() {
   const [modalStatus, setModalStatus] = useState<TaskStatus>('a_fazer')
   const [filterCliente, setFilterCliente] = useState('')
   const [search, setSearch] = useState('')
+  const [profiles, setProfiles] = useState<Profile[]>([])
+  const [detailTask, setDetailTask] = useState<Task | null>(null)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }))
 
   const fetchData = useCallback(async () => {
     const supabase = createClient()
-    const [tasksRes, clientesRes, pilaresRes] = await Promise.all([
+    const [tasksRes, clientesRes, pilaresRes, profilesRes] = await Promise.all([
       supabase.from('tasks').select('*, pillar:pillars(id,nome), responsavel:profiles(id,nome), client:clients(id,nome_empresa)').order('created_at', { ascending: false }),
       supabase.from('clients').select('id, nome_empresa').eq('ativo', true).order('nome_empresa'),
       supabase.from('pillars').select('*').order('ordem'),
+      supabase.from('profiles').select('id, nome').order('nome'),
     ])
     setTasks((tasksRes.data as Task[]) || [])
     setClientes((clientesRes.data as Client[]) || [])
     setPilares((pilaresRes.data as Pillar[]) || [])
+    setProfiles((profilesRes.data as Profile[]) || [])
     setLoading(false)
   }, [])
 
@@ -472,6 +479,7 @@ export default function TarefasPage() {
                 status={status}
                 tasks={getColumnTasks(status)}
                 onAddTask={openModal}
+                onOpen={setDetailTask}
               />
             ))}
           </div>
@@ -489,6 +497,17 @@ export default function TarefasPage() {
           pilares={pilares}
           onClose={() => setShowModal(false)}
           onSaved={() => { setShowModal(false); fetchData() }}
+        />
+      )}
+
+      {detailTask && (
+        <TaskDetailModal
+          task={detailTask}
+          clientes={clientes}
+          pilares={pilares}
+          profiles={profiles}
+          onClose={() => setDetailTask(null)}
+          onChanged={fetchData}
         />
       )}
     </div>
