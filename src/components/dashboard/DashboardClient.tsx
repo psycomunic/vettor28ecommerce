@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import Link from 'next/link'
 import {
   Users, Plug, TrendingUp, DollarSign, Target,
@@ -54,8 +54,12 @@ function daysUntil(dateStr: string): number {
 }
 
 export function DashboardClient({ profile, clientes, integracoes, metrics, tarefas, onboarding, contratos }: Props) {
-  const hora = new Date().getHours()
-  const saudacao = hora < 12 ? 'Bom dia' : hora < 18 ? 'Boa tarde' : 'Boa noite'
+  // Saudação calculada só no cliente (evita mismatch de hidratação SSR/cliente)
+  const [saudacao, setSaudacao] = useState('Boa noite')
+  useEffect(() => {
+    const h = new Date().getHours()
+    setSaudacao(h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite')
+  }, [])
   const [period, setPeriod] = useState<PeriodPreset>('30')
   const [customStart, setCustomStart] = useState(daysAgoISO(30))
   const [customEnd, setCustomEnd] = useState(todayISO())

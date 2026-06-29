@@ -1,1 +1,1 @@
-fix: corrige menu sumindo na home (remove pagina duplicada) + boas-vindas e estados vazios no dashboard  
+fix: corrige erro de hidratacao (#418) da saudacao no dashboard  
