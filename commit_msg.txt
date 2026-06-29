@@ -1,1 +1,1 @@
-feat: card de tarefa com comentarios, mencoes e anexos + sino de notificacoes + corrige espaco da sidebar  
+feat: CRM de vendas com funil kanban, leads, atividades e conversao em cliente  

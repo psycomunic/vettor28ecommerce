@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Users, Briefcase, CheckSquare, Map,
-  BarChart2, FileText, Settings, X, Zap, LogOut, Plug
+  BarChart2, FileText, Settings, X, Zap, LogOut, Plug, TrendingUp
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -13,6 +13,7 @@ import { useUser } from '@/hooks/useUser'
 const navItems = [
   { href: '/',            label: 'Dashboard',     icon: LayoutDashboard, roles: ['admin','gestor','colaborador'] },
   { href: '/clientes',    label: 'Clientes',       icon: Briefcase,       roles: ['admin','gestor','colaborador'] },
+  { href: '/crm',         label: 'CRM / Vendas',   icon: TrendingUp,      roles: ['admin','gestor'] },
   { href: '/tarefas',     label: 'Tarefas',        icon: CheckSquare,     roles: ['admin','gestor','colaborador'] },
   { href: '/onboarding',  label: 'Onboarding',     icon: Map,             roles: ['admin','gestor','colaborador'] },
   { href: '/resultados',  label: 'Resultados',     icon: BarChart2,       roles: ['admin','gestor','colaborador'] },
